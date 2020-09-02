@@ -2,9 +2,9 @@ class UsersController < ApplicationController
   before_action :ensure_correct_user, only: [:update]
 
   def show
-    @user = User.find(params[:id])
-    @books = @user.books
+    @books = Book.where(user_id: @user)
     @book = Book.new
+    @user = User.find(params[:id])
   end
 
   def index
@@ -13,7 +13,11 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
+    if @user == current_user
+        render "edit"
+    else
+      redirect_to user_path(current_user)
+    end
   end
 
   def update
